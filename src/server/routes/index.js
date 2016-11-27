@@ -11,8 +11,6 @@ var products = [
 ];
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
 
 router.get('/products/:name', function(req, res, next) {
   var productName = req.params.name;
@@ -33,7 +31,6 @@ router.post('/charge', function(req, res,next) {
 
   stripe.charges.create({
     card: stripeToken,
-    currency: 'usd',
     amount: amount
   },
   function(err, charge) {

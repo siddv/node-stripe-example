@@ -29,9 +29,7 @@ var paths = {
   server: [
     './src/server/bin/www'
   ],
-  distServer: [
-    './dist/server/bin/www'
-  ]
+  distServer: './dist/server/bin/www'
 };
 
 var nodemonConfig = {

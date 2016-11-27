@@ -1,4 +1,4 @@
-Stripe.setPublishableKey('UPDATE ME');
+Stripe.setPublishableKey('pk_test_oyCcV2K6pfSsivVgkI3UkY2e');
 
 $(document).on('ready', function() {
   $('form-errors').hide();
