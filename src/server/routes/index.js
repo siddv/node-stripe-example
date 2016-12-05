@@ -25,27 +25,14 @@ router.get('/', function(req, res, next) {
     }
   }});
 
-router.get('/products/:name', function(req, res, next) {
-  var productName = req.params.name;
-  for (var i = 0; i < products.length; i++) {
-    if(productName === products[i].productName) {
-      return res.render('product', {productInfo: products[i]});
-    } else {
-      return res.send('Product does not exist.');
-    }
-  }
-});
-
-router.post('/charge', function(req, res,next) {
+router.post('/charge', function(req, res, next) {
 
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-  var stripeToken = req.body.stripeToken;
-  var amount = req.body.price * 100;
-  var charity = req.body.charity;
-
-  // ensure amount === actual product amount to avoid fraud
+  var stripeToken = req.body.stripeToken,
+      amount = req.body.amount * 100,
+      charity = req.body.charity,
+      name = req.body.name;
 
   stripe.charges.create({
     card: stripeToken,
@@ -53,13 +40,25 @@ router.post('/charge', function(req, res,next) {
     amount: amount
   },
   function(err, charge) {
+
     if (err) {
+
       console.log(err);
-      res.send('error');
+
+      res.status(err.statusCode).json({error: err.message});
+
     } else {
-      res.send(charge);
-      console.log('charge', charge)
+
+      res.send({
+        amount: charge.amount,
+        charity: charity,
+        name: name
+      });
+
+      console.log('charge', charge);
+
     }
+
   });
 });
 
