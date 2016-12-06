@@ -1,6 +1,20 @@
 var express = require('express');
 var router = express.Router();
-var stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+var environment =  process.env.MODE || 'DEVELOPMENT';
+var stripe;
+var publicKey;
+
+if (environment === 'PRODUCTION') {
+
+  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY_LIVE);
+  publicKey = process.env.STRIPE_PUBLIC_KEY_LIVE;
+
+} else {
+
+  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+  publicKey = process.env.STRIPE_PUBLIC_KEY;
+
+}
 
 var products = [
   {
@@ -24,6 +38,11 @@ router.get('/', function(req, res, next) {
       return res.send('Product does not exist.');
     }
   }});
+
+
+router.get('/key', function(req, res, next) {
+  res.send(publicKey)
+});
 
 router.post('/charge', function(req, res, next) {
 
