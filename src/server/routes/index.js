@@ -41,6 +41,7 @@ router.get('/', function(req, res, next) {
 
 
 router.get('/key', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
   res.send(publicKey)
 });
 
