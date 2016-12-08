@@ -84,8 +84,14 @@ router.use('/charge', function(req, res, next) {
     }
 
   });
+  } else if(req.method == 'OPTIONS') {
+
+    res.send({preflight: 'preflight'})
+
   } else {
+
     res.sendStatus(405);
+
   }
 });
 
