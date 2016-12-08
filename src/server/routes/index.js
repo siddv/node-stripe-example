@@ -40,15 +40,19 @@ router.get('/', function(req, res, next) {
   }});
 
 
-router.get('/key', function(req, res, next) {
+router.use('/key', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Methods', 'GET,OPTIONS');
+
   res.send(publicKey)
 });
 
-router.post('/charge', function(req, res, next) {
+router.use('/charge', function(req, res, next) {
 
   res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Methods', 'POST,OPTIONS');
 
+  if (req.method == 'POST') {
   var stripeToken = req.body.stripeToken,
       amount = req.body.amount * 100,
       charity = req.body.charity,
@@ -80,6 +84,9 @@ router.post('/charge', function(req, res, next) {
     }
 
   });
+  } else {
+    res.sendStatus(405);
+  }
 });
 
 module.exports = router;
