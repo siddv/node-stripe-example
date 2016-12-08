@@ -51,40 +51,40 @@ router.use('/charge', function(req, res, next) {
 
   res.header("Access-Control-Allow-Origin", "*");
   res.header('Access-Control-Allow-Methods', 'POST,OPTIONS');
-  res.header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
   if (req.method == 'POST') {
-  var stripeToken = req.body.stripeToken,
-      amount = req.body.amount * 100,
-      charity = req.body.charity,
-      name = req.body.name;
 
-  stripe.charges.create({
-    card: stripeToken,
-    currency: 'gbp',
-    amount: amount
-  },
-  function(err, charge) {
+    var stripeToken = req.body.stripeToken,
+        amount = req.body.amount * 100,
+        charity = req.body.charity,
+        name = req.body.name;
 
-    if (err) {
+    stripe.charges.create({
+      card: stripeToken,
+      currency: 'gbp',
+      amount: amount,
+      description: "Tribal Christmas Donations"
+    },
+    function(err, charge) {
 
-      console.log(err);
+      if (err) {
 
-      res.status(err.statusCode).json({error: err.message});
+        res.status(err.statusCode).json({error: err.message});
 
-    } else {
+      } else {
 
-      res.send({
-        amount: charge.amount,
-        charity: charity,
-        name: name
-      });
+        res.send({
+          amount: charge.amount,
+          charity: charity,
+          name: name,
+          id: charge.id + charge.created
+        });
 
-      console.log('charge', charge);
+      }
 
-    }
+    });
 
-  });
   } else if(req.method == 'OPTIONS') {
 
     res.send({preflight: 'preflight'})
